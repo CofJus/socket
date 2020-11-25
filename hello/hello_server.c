@@ -10,7 +10,10 @@ void error_handling(char *message);
 
 int main(int argc, char *argv[])
 {
-    int serv_sock;/* 文件描述符 */
+    /* 服务器socket文件描述符 */
+    int serv_sock;
+
+    /* 客户端socket文件描述符 */
     int clnt_sock;
 
     /* 服务器端地址信息结构体 */
@@ -85,7 +88,7 @@ int main(int argc, char *argv[])
      */
     clnt_addr_size = sizeof(clnt_addr);
     clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
-    if(clnt_sock == -1)
+    if(clnt_sock == -1) 
     {
         error_handling("accept() error");
     }
