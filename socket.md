@@ -159,5 +159,33 @@ serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 int bind(int sockfd, struct sockaddr * myaddr, socklen_t addrlen);
 ```
 
+#### 进入等待连接请求状态
+
+```c
+#include <sys/socket.h>
+
+/**
+ * sock:希望进入等待状态的socket文件描述符
+ * backlog:连接请求等待队列的长度
+ */
+int listen(int sock, int backlog);
+```
+
+#### 受理客户端请求
+
+```c
+#include <sys/socket.h>
+
+/**
+ * sock:服务器socket文件描述符
+ * addr:保存客户端地址信息的结构体变量
+ * addrlen:第二个参数的长度
+ * 成功返回客户端socket文件描述符，失败返回-1
+ */
+int accept(int sock, struct sockaddr * addr, socket_t * addrlen);
+```
+
+
+
 
 
