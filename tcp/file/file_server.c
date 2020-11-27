@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
         exit(1);  
     }  
 
-    fp = fopen("file_ssrv.c","rb");
+    fp = fopen("file_server.c","rb");
     serv_sd = socket(PF_INET,SOCK_STREAM,0);  
     if(serv_sd == -1){  
         error_handling("socket() error");  
