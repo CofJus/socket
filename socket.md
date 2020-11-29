@@ -185,7 +185,107 @@ int listen(int sock, int backlog);
 int accept(int sock, struct sockaddr * addr, socket_t * addrlen);
 ```
 
+### 断开套接字连接
 
+#### TCP半关闭
 
+##### close
 
+close函数的断开是完全断开，即同时关闭接收和发送。
+
+试想一种场景，A、B主机进行双向通信，A发送完所有数据后close，同时失去接收数据的能力，此时B尚未发送给A的数据将无法被A接收到。
+
+##### shutdown
+
+```c
+#include <sys/socket.h>
+
+/**
+ * sock:文件描述符
+ * howto:SHUT_RD(断开输入流),SHUT_WR(断开输出流),SHUTRDWR(同时断开)
+ * 成功返回0，失败返回-1
+ */
+int shutdown(int sock, int howto);
+```
+
+SHUTRDWR相当于调用两次shutdown，两次参数分别为SHUT_RD,SHUT_WR。
+
+### DNS
+
+#### 使用域名的必要性
+
+域名不常变而IP常变，在代码中使用IP地址不是一个好办法。
+
+#### IP地址和域名的转换
+
+##### 域名->IP
+
+```c
+#include <netdb.h>
+
+/**
+ * 域名->IP
+ * 成功返回hostent结构体地址，失败返回NULL
+ */
+struct hostent * gethostbyname(const char * hostname);
+
+struct hostent
+{
+    char * h_name;			//官方域名
+    char ** h_aliases;		//其他域名
+    int h_addrtype;			//IP地址类型(IPV4,IPV6)
+    int h_length;			//IP地址长度
+    char ** h_addr_list;	//IP地址
+}
+```
+
+##### IP->域名
+
+```c
+#include <netdb.h>
+
+/**
+ * IP->域名
+ * 传入三个参数，依次为IP地址，长度（IPV4时为4，IPV6时为16），地址族信息（AF_INET,AF_INET6)
+ * 成功返回hostent结构体变量，失败返回NULL
+ */
+struct hostent * gethostbyaddr(const char * addr, socklen_t len, int family);
+```
+
+### 套接字的多种可选项
+
+### 多进程服务器
+
+#### 并发服务器实现模型
+
+- 多进程服务器：通过创建多个进程提供服务
+- 多路复用服务器：通过捆绑并统一管理I/O对象提供服务
+- 多线程服务器：通过生成与客户端等量的线程提供服务
+
+#### 进程
+
+##### 进程ID
+
+```shell
+#查看当前运行的所有进程
+ps au
+```
+
+##### fork函数
+
+```c
+#include <unistd.h>
+
+/**
+ * 成功时返回进程ID，失败返回-1
+ */
+pid_t fork(void);
+```
+
+fork函数通过复制父进程实现创建进程。
+
+- 父进程：返回子进程ID
+- 子进程：返回0
+
+##### 僵尸进程
 
